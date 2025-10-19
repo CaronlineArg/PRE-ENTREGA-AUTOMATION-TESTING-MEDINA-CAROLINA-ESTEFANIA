@@ -19,6 +19,8 @@ Este proyecto tiene como objetivo la **verificación automatizada** de:
 
 Se utiliza el sitio de prueba: [https://www.saucedemo.com](https://www.saucedemo.com) para practicar pruebas funcionales usando automatización.
 
+## Aclaración: 
+Se utilizó edge por un modal bloqueante por contraseña expuesta
 ---
 
 ## Tecnologías utilizadas

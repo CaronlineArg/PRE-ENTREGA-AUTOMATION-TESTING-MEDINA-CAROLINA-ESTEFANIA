@@ -1,3 +1,4 @@
+# tests/test_navigation.py
 from helpers.login_helper import login
 from selenium.webdriver.common.by import By
 
