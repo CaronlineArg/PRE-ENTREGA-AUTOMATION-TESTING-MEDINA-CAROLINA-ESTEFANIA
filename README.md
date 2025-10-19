@@ -1,5 +1,9 @@
 # Proyecto de Automatización - Saucedemo
 
+# Repositorio con ejercicios de todas las clases
+
+Github: [https://github.com/CaronlineArg/talentTechMed]
+
 # Test cases manuales
 Excel: [https://docs.google.com/spreadsheets/d/1MAF1m6u6Qeivu1B7kOLxRv069PX5ZePx5HgPgwOTeJ4/edit?usp=sharing]
 
