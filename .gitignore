@@ -1,0 +1,32 @@
+# .gitignore
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+
+# Pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Reports
+reports/*.html
+reports/*.png
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Selenium
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
