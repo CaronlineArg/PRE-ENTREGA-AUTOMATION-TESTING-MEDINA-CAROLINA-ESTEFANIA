@@ -3,10 +3,12 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from helpers.login_helper import login
+from utils.datos_json import read_products_from_json
+import pathlib
 
-def test_product_items_and_cart(driver):  # driver viene del fixture
-
-    login(driver, "standard_user", "secret_sauce")  # ya usa el driver del fixture
+def test_product_items_and_cart(driver):
+    # Hacer login
+    login(driver, "standard_user", "secret_sauce")
 
     wait = WebDriverWait(driver, 10)
 
@@ -16,17 +18,23 @@ def test_product_items_and_cart(driver):  # driver viene del fixture
     menu_button = wait.until(EC.visibility_of_element_located((By.ID, "react-burger-menu-btn")))
     assert menu_button.is_displayed()
 
+    # Traer productos de JSON
+    json_path = pathlib.Path("tests/datos/productos.json")
+    productos_json = read_products_from_json(json_path)
+
+    expected_products = []
+    for producto in productos_json:
+        expected_products.append({
+            "name": producto["nombre"],
+            "price": f"${producto['precio']:.2f}",
+            "id": f"add-to-cart-{producto['nombre'].lower().replace(' ', '-')}"
+        })
+
+    # Validar productos en la página
     product_items = driver.find_elements(By.CLASS_NAME, "inventory_item")
     assert len(product_items) > 0
 
-    expected_products = [
-        {"name": "Sauce Labs Backpack", "price": "$29.99", "id": "add-to-cart-sauce-labs-backpack"},
-        {"name": "Sauce Labs Bike Light", "price": "$9.99", "id": "add-to-cart-sauce-labs-bike-light"},
-        {"name": "Sauce Labs Bolt T-Shirt", "price": "$15.99", "id": "add-to-cart-sauce-labs-bolt-t-shirt"}
-    ]
-
-    # Validar productos
-    for i in range(3):
+    for i in range(len(expected_products)):
         name = product_items[i].find_element(By.CLASS_NAME, "inventory_item_name").text
         price = product_items[i].find_element(By.CLASS_NAME, "inventory_item_price").text
         assert name == expected_products[i]["name"]
@@ -39,16 +47,16 @@ def test_product_items_and_cart(driver):  # driver viene del fixture
         add_to_cart.click()
         productos_agregados.append(product["name"])
 
-        cart_badge = WebDriverWait(driver, 10).until(
+        cart_badge = wait.until(
             EC.visibility_of_element_located((By.CLASS_NAME, "shopping_cart_badge"))
         )
-        WebDriverWait(driver, 10).until(lambda d: cart_badge.text == str(i + 1))
+        wait.until(lambda d: cart_badge.text == str(i + 1))
         assert cart_badge.text == str(i + 1), f"Badge debería mostrar {i + 1}, muestra {cart_badge.text}"
 
     # Ir al carrito
     cart_icon = driver.find_element(By.CLASS_NAME, "shopping_cart_link")
     cart_icon.click()
-    WebDriverWait(driver, 10).until(EC.url_contains("cart.html"))
+    wait.until(EC.url_contains("cart.html"))
     assert "cart.html" in driver.current_url
 
     # Verificar productos en el carrito
