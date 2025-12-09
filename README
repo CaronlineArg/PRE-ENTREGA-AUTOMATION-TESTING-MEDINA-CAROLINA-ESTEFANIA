@@ -57,3 +57,5 @@ pytest --html=report.html
 
 # Ejecutar todos los test y generar reporte
 pytest 
+
+# Medina Carolina
