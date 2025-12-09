@@ -57,6 +57,7 @@ def browser_name():
 @pytest.fixture
 def driver():
     edge_options = EdgeOptions()
+    edge_options.add_argument("--headless")
     edge_options.add_argument("--start-maximized")
     edge_options.add_argument("--disable-infobars")
     edge_options.add_argument("--disable-extensions")
