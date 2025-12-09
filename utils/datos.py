@@ -1,15 +1,29 @@
 import csv
-import pathlib
+from pathlib import Path
 
-def read_login_data_from_csv(filepath):
-    """Lee user,password,access_granted del CSV y devuelve una lista de tuplas."""
+
+def leer_csv_login(relative_path: str):
+    """
+    Lee un archivo CSV desde la raíz del proyecto.
+    """
     data = []
-    with open(filepath, newline="", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            username = row["user"]
-            password = row["password"]
-            access_granted = row["access_granted"].strip().lower() == "true"
-            data.append((username, password, access_granted))
-    return data
 
+ 
+    project_root = Path(__file__).resolve().parent.parent
+
+   
+    file_path = (project_root / relative_path).resolve()
+
+    if not file_path.exists():
+        raise FileNotFoundError(f"❌ No se encontró el archivo CSV en: {file_path}")
+
+    with open(file_path, newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for fila in reader:
+            data.append((
+                fila["user"],
+                fila["password"],
+                fila["access_granted"].strip().lower() == "true"
+            ))
+
+    return data
