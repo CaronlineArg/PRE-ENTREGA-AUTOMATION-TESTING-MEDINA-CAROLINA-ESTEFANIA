@@ -1,11 +1,12 @@
+
 # Proyecto de Automatización - Saucedemo
 
 # Repositorio con ejercicios de todas las clases
 
 Github: [https://github.com/CaronlineArg/talentTechMed]
 
-# Test cases manuales
-Excel: [https://docs.google.com/spreadsheets/d/1MAF1m6u6Qeivu1B7kOLxRv069PX5ZePx5HgPgwOTeJ4/edit?usp=sharing]
+# Test cases 
+Excel:  [https://docs.google.com/spreadsheets/d/1GNX8_Fo-I8oTcUFbEi1rcd6-F2eNsXQun5W58RoDqY0/edit?usp=sharing]
 
 ## Propósito
 
@@ -54,5 +55,7 @@ pytest tests/ -s
 - Para generar un reporte HTML (si tenés pytest-html instalado):
 pytest --html=report.html
 
-# Generar reporte
-pytest -v --html=reports/reporte.html
+# Ejecutar todos los test y generar reporte
+pytest 
+
+# Medina Carolina 2025
