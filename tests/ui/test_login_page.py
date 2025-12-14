@@ -16,4 +16,6 @@ def test_login_page_pom(driver, usuario, clave, debe_loguear):
     if debe_loguear:
         assert "inventory.html" in driver.current_url
     else:
-        assert login.hay_error()
+        mensaje = login.obtener_mensaje_error()
+        assert "Epic sadface" in mensaje
+

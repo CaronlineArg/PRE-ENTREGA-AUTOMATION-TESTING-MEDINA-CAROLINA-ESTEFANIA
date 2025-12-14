@@ -8,6 +8,20 @@ Github: [https://github.com/CaronlineArg/talentTechMed]
 # Test cases 
 Excel:  [https://docs.google.com/spreadsheets/d/1GNX8_Fo-I8oTcUFbEi1rcd6-F2eNsXQun5W58RoDqY0/edit?usp=sharing]
 
+## Pruebas de UI
+- Login válido e inválido (parametrizado con CSV)
+- Validación de inventario
+- Agregar productos al carrito
+- Checkout completo
+
+## Pruebas de API
+- GET usuarios
+- POST creación de usuario
+- DELETE usuario
+- Escenario negativo (404)
+- TEST con encadenamiento de requests
+
+
 ## Propósito
 
 Este proyecto tiene como objetivo la **verificación automatizada** de:
@@ -29,7 +43,18 @@ Se utilizó edge por un modal bloqueante por contraseña expuesta
 - [Python 3.x](https://www.python.org/)
 - [Pytest](https://docs.pytest.org/)
 - [Selenium WebDriver](https://www.selenium.dev/)
-- [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/) (para Google Chrome)
+- Requests
+- Git / GitHub
+
+## Estructura del proyecto
+pages/        → Page Object Model (UI)
+tests/
+  ├── ui/     → Tests de interfaz
+  └── api/    → Tests de API
+utils/        → Utilidades (CSV, logger, helpers)
+reports/     → Reportes HTML
+screens/     → Capturas de pantalla
+
 
 ---
 
@@ -56,6 +81,6 @@ pytest tests/ -s
 pytest --html=report.html
 
 # Ejecutar todos los test y generar reporte
-pytest 
+pytest --html=reports/report.html
 
 # Medina Carolina 2025

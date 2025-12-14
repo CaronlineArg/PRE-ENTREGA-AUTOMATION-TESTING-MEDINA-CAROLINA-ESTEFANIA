@@ -17,4 +17,5 @@ def test_login_parametrizado(driver, usuario, clave, debe):
     if debe:
         assert "inventory.html" in driver.current_url, "El usuario válido no ingresó"
     else:
-        assert login.hay_error(), "Usuario inválido debería mostrar error"
+        mensaje = login.obtener_mensaje_error()
+        assert "Epic sadface" in mensaje, "El mensaje de error no es correcto"

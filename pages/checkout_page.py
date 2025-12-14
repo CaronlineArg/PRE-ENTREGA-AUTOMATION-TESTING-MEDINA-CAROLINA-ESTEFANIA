@@ -1,6 +1,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 
 class CheckoutPage:
     _NAME = (By.ID, "first-name")
@@ -37,5 +38,5 @@ class CheckoutPage:
         try:
             self.wait.until(EC.visibility_of_element_located(self._ERROR))
             return True
-        except:
+        except TimeoutException:
             return False

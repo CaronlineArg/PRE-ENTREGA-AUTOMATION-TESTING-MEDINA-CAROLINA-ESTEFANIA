@@ -19,13 +19,13 @@ class LoginPage:
         self.driver.get(self.URL)
         return self
 
-    def completar_usuario(self, usuario: str):
+    def completar_usuario(self, usuario):
         campo = self.wait.until(EC.visibility_of_element_located(self._USER))
         campo.clear()
         campo.send_keys(usuario)
         return self
 
-    def completar_clave(self, clave: str):
+    def completar_clave(self, clave):
         campo = self.wait.until(EC.visibility_of_element_located(self._PASS))
         campo.clear()
         campo.send_keys(clave)
@@ -36,21 +36,9 @@ class LoginPage:
         return self
 
     def login_completo(self, usuario, clave):
-        return (
-            self.abrir()
-            .completar_usuario(usuario)
-            .completar_clave(clave)
-            .enviar()
-        )
-
-    def hay_error(self):
-        try:
-            self.wait.until(EC.visibility_of_element_located(self._ERROR))
-            return True
-        except:
-            return False
+        return self.abrir().completar_usuario(usuario).completar_clave(clave).enviar()
 
     def obtener_mensaje_error(self):
-        if self.hay_error():
-            return self.driver.find_element(*self._ERROR).text
-        return ""
+        return self.wait.until(
+            EC.visibility_of_element_located(self._ERROR)
+        ).text

@@ -31,8 +31,12 @@ class InventoryPage:
         return self.driver.find_elements(*self._ITEM)
 
     def add_first_product(self):
-        self.driver.find_elements(*self._ADD_BTN)[0].click()
+        botones = self.wait.until(
+            EC.visibility_of_all_elements_located(self._ADD_BTN)
+        )
+        botones[0].click()
         return self
+
 
     def open_cart(self):
         self.driver.find_element(*self._CART_LINK).click()
