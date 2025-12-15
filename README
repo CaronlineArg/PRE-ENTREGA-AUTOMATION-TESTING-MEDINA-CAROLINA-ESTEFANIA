@@ -40,7 +40,7 @@ Se utilizó edge por un modal bloqueante por contraseña expuesta
 - [Pytest](https://docs.pytest.org/)
 - [Selenium WebDriver](https://www.selenium.dev/)
 - Requests
-- Git / GitHub
+- [Git / GitHub](https://github.com/CaronlineArg/PRE-ENTREGA-AUTOMATION-TESTING-MEDINA-CAROLINA-ESTEFANIA)
 - pytest-html (para reportes)
 
 ## Estructura del proyecto
