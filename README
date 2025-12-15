@@ -8,17 +8,27 @@ Github: [https://github.com/CaronlineArg/talentTechMed]
 # Test cases 
 Excel:  [https://docs.google.com/spreadsheets/d/1GNX8_Fo-I8oTcUFbEi1rcd6-F2eNsXQun5W58RoDqY0/edit?usp=sharing]
 
+
+
 ## Propósito
 
-Este proyecto tiene como objetivo la **verificación automatizada** de:
+Este proyecto tiene como objetivo la automatización de pruebas funcionales sobre el sitio de práctica: [Saucedemo](https://www.saucedemo.com/)
 
--  Login de usuarios (válido e inválido)
--  Navegación a la página de productos
--  Verificación de productos listados
--  Validación de precios y nombres
--  Agregado de productos al carrito
+- Login de usuarios (válido e inválido)
 
-Se utiliza el sitio de prueba: [https://www.saucedemo.com](https://www.saucedemo.com) para practicar pruebas funcionales usando automatización.
+- Navegación y elementos del inventario
+
+- Validación de productos y precios
+
+- Agregado de productos al carrito
+
+- Flujo de checkout completo
+
+- Pruebas de API (GET, POST, DELETE) incluyendo escenarios negativos y encadenamiento de requests
+
+Nota: Se utilizó Edge debido a un modal bloqueante por contraseña expuesta.
+
+
 
 ## Aclaración: 
 Se utilizó edge por un modal bloqueante por contraseña expuesta
@@ -29,7 +39,19 @@ Se utilizó edge por un modal bloqueante por contraseña expuesta
 - [Python 3.x](https://www.python.org/)
 - [Pytest](https://docs.pytest.org/)
 - [Selenium WebDriver](https://www.selenium.dev/)
-- [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/) (para Google Chrome)
+- Requests
+- [Git / GitHub](https://github.com/CaronlineArg/PRE-ENTREGA-AUTOMATION-TESTING-MEDINA-CAROLINA-ESTEFANIA)
+- pytest-html (para reportes)
+
+## Estructura del proyecto
+pages/        → Page Object Model (UI)
+tests/
+  ├── ui/     → Tests de interfaz
+  └── api/    → Tests de API
+utils/        → Utilidades (CSV, logger, helpers)
+reports/     → Reportes HTML
+screens/     → Capturas de pantalla
+
 
 ---
 
@@ -52,10 +74,24 @@ pytest tests/
 - Para ver los prints y mensajes en consola:
 pytest tests/ -s
 
-- Para generar un reporte HTML (si tenés pytest-html instalado):
+- Para generar un reporte HTML de todos los test(si tenés pytest-html instalado):
 pytest --html=report.html
+- Para Ejecutar tests específicos (por carpeta):
+pytest tests/ui/
+pytest tests/api/
 
-# Ejecutar todos los test y generar reporte
-pytest 
+## Interpretación de reportes
+
+- Los reportes HTML se generan en la carpeta reports/.
+
+- Cada test fallido guarda un screenshot en screens/.
+
+- Los logs de ejecución se encuentran en reports/logs/framework.log.
+
+- El reporte indica:
+Nombre del test
+Estado (Pasado / Fallido)
+Duración
+Captura de pantalla si falló
 
 # Medina Carolina 2025

@@ -11,8 +11,23 @@ jobs:
     runs-on: ubuntu-latest 
 
     steps:
+    
       - name: Checkout del Repositorio
         uses: actions/checkout@v4 
+      - name: Instalar Microsoft Edge
+        run: |
+          # Actualizar lista de paquetes
+          sudo apt-get update
+          # Instalar dependencias necesarias para navegadores basados en Chromium
+          sudo apt-get install -y wget apt-transport-https ca-certificates curl gnupg
+          # Descargar la clave de Microsoft
+          curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /usr/share/keyrings/microsoft-edge.gpg > /dev/null
+          # Agregar el repositorio de Edge a las fuentes de apt
+          echo "deb [arch=amd64 signed-by=/usr/share/keyrings/microsoft-edge.gpg] https://packages.microsoft.com/repos/edge stable main" | sudo tee /etc/apt/sources.list.d/microsoft-edge.list
+          # Instalar Edge
+          sudo apt-get update
+          sudo apt-get install -y microsoft-edge-stable
+
       
       - name: Configurar Python 3.x
         uses: actions/setup-python@v5 
