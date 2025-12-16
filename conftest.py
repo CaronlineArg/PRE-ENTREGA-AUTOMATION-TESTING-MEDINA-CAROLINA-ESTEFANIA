@@ -94,6 +94,7 @@ def pytest_runtest_makereport(item, call):
                         f'style="width:600px;border:1px solid #ccc"/></div>'
                     )
                 )
+
             
             print(f"📸 Screenshot guardado e incrustado: {file_path}")
         except Exception as e:
