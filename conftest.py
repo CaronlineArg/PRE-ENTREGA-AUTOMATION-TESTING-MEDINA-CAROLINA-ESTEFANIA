@@ -11,11 +11,8 @@ import os
 PROJECT_NAME = "SauceDemo"
 EXECUTION_TYPE = "AllTests"
 BROWSER = "edge"
-# Obtener la raíz del proyecto usando el directorio de trabajo actual
-# Esto garantiza que siempre use donde se ejecuta pytest
-PROJECT_ROOT = Path.cwd()  # Directorio desde donde ejecutas pytest
+PROJECT_ROOT = Path.cwd()
 
-# Crear directorios
 SCREEN_DIR = PROJECT_ROOT / "screens"
 SCREEN_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -24,7 +21,6 @@ REPORTS_DIR.mkdir(parents=True, exist_ok=True)
 
 logger = get_logger('framework')
 
-# Mostrar rutas para debug
 print(f"\n{'='*70}")
 print(f"🔍 Configuración de rutas:")
 print(f"   🏠 Directorio de trabajo: {PROJECT_ROOT}")
@@ -32,42 +28,28 @@ print(f"   📊 Carpeta de reportes: {REPORTS_DIR}")
 print(f"   📸 Carpeta de screenshots: {SCREEN_DIR}")
 print(f"{'='*70}\n")
 
-
 def pytest_configure(config):
-    """Configurar el nombre del reporte con nombre descriptivo + fecha y hora"""
-
-    # 🔹 Datos descriptivos del reporte
     PROJECT_NAME = "SauceDemo"
     BROWSER = "edge"
     EXECUTION_TYPE = "AllTests"
-
-    # Zona horaria de Argentina (UTC-3)
     tz_argentina = timezone(timedelta(hours=-3))
     now = datetime.now(tz_argentina)
-
-    # Timestamp legible
     timestamp = now.strftime("%Y-%m-%d_%H-%M-%S")
-
-    # Nombre final del reporte
     report_name = f"{PROJECT_NAME}_{BROWSER}_{EXECUTION_TYPE}_{timestamp}.html"
     report_path = REPORTS_DIR / report_name
 
-    # Configurar el plugin HTML solo si no viene por consola
     if not config.option.htmlpath:
         config.option.htmlpath = str(report_path)
         config.option.self_contained_html = True
 
-    # Logs informativos
     print(f"\n📊 Generando reporte HTML")
     print(f"   📄 Nombre: {report_name}")
     print(f"   📁 Ruta: {report_path}")
     print(f"   🕐 Hora Argentina: {now.strftime('%d/%m/%Y %H:%M:%S')}\n")
 
-
 @pytest.fixture(scope='session')
 def browser_name():
     return 'edge'
-
 
 @pytest.fixture
 def driver():
@@ -85,7 +67,6 @@ def driver():
     
     driver.quit()
 
-
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     outcome = yield
@@ -102,10 +83,8 @@ def pytest_runtest_makereport(item, call):
     if report.when == "call" and report.failed and drv:
         tz_argentina = timezone(timedelta(hours=-3))
         timestamp = datetime.now(tz_argentina).strftime("%Y-%m-%d_%H-%M-%S")
-
         browser = drv.capabilities.get("browserName", "browser")
         file_name = f"{item.name}_{browser}_{report.when}_{timestamp}.png"
-
         file_path = SCREEN_DIR / file_name
 
         try:
@@ -122,13 +101,10 @@ def pytest_runtest_makereport(item, call):
         except Exception as e:
             logger.error(f"No se pudo guardar screenshot: {e}")
 
-
 def pytest_html_report_title(report):
     report.title = "Framework SauceDemo – Reporte General"
 
-
 def pytest_html_results_summary(prefix, summary, postfix):
-    # Zona horaria de Argentina (UTC-3)
     tz_argentina = timezone(timedelta(hours=-3))
     timestamp = datetime.now(tz_argentina).strftime("%d-%b-%Y a las %H:%M:%S")
     
@@ -138,9 +114,7 @@ def pytest_html_results_summary(prefix, summary, postfix):
         f"<p><b>Fecha de ejecución:</b> {timestamp} (Argentina)</p>",
     ])
 
-
 def pytest_sessionfinish(session, exitstatus):
-    """Hook que se ejecuta al finalizar la sesión"""
     if hasattr(session.config.option, 'htmlpath') and session.config.option.htmlpath:
         report_path = Path(session.config.option.htmlpath)
         if report_path.exists():
