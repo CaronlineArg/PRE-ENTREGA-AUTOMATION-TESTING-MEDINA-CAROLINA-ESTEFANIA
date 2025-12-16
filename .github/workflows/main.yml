@@ -43,8 +43,9 @@ jobs:
           pytest -s --html=reports/reporte.html
 
       # 6️⃣ Subir reporte HTML como artefacto
-      - name: Guardar reporte HTML
-        uses: actions/upload-artifact@v3
-        with:
-          name: reporte-html
-          path: reports/reporte.html
+      -  name: Subir reportes
+         uses: actions/upload-artifact@v4
+         with:
+         name: reports
+         path: reports/
+
