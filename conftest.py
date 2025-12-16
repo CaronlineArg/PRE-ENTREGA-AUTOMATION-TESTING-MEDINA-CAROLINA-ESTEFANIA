@@ -8,6 +8,9 @@ from time import time
 from datetime import datetime, timezone, timedelta
 import os
 
+PROJECT_NAME = "SauceDemo"
+EXECUTION_TYPE = "AllTests"
+BROWSER = "edge"
 # Obtener la raíz del proyecto usando el directorio de trabajo actual
 # Esto garantiza que siempre use donde se ejecuta pytest
 PROJECT_ROOT = Path.cwd()  # Directorio desde donde ejecutas pytest
@@ -31,22 +34,34 @@ print(f"{'='*70}\n")
 
 
 def pytest_configure(config):
-    """Configurar el nombre del reporte con timestamp"""
+    """Configurar el nombre del reporte con nombre descriptivo + fecha y hora"""
+
+    # 🔹 Datos descriptivos del reporte
+    PROJECT_NAME = "SauceDemo"
+    BROWSER = "edge"
+    EXECUTION_TYPE = "AllTests"
+
     # Zona horaria de Argentina (UTC-3)
     tz_argentina = timezone(timedelta(hours=-3))
     now = datetime.now(tz_argentina)
-    timestamp = now.strftime("%Y%m%d_%H%M%S")
-    report_name = f"report_{timestamp}.html"
+
+    # Timestamp legible
+    timestamp = now.strftime("%Y-%m-%d_%H-%M-%S")
+
+    # Nombre final del reporte
+    report_name = f"{PROJECT_NAME}_{BROWSER}_{EXECUTION_TYPE}_{timestamp}.html"
     report_path = REPORTS_DIR / report_name
-    
-    # Configurar el plugin HTML solo si no está ya configurado
+
+    # Configurar el plugin HTML solo si no viene por consola
     if not config.option.htmlpath:
         config.option.htmlpath = str(report_path)
         config.option.self_contained_html = True
-    
-    print(f"📊 Generando reporte HTML: {report_name}")
-    print(f"📁 Ruta completa: {report_path}")
-    print(f"🕐 Hora Argentina: {now.strftime('%d/%m/%Y %H:%M:%S')}\n")
+
+    # Logs informativos
+    print(f"\n📊 Generando reporte HTML")
+    print(f"   📄 Nombre: {report_name}")
+    print(f"   📁 Ruta: {report_path}")
+    print(f"   🕐 Hora Argentina: {now.strftime('%d/%m/%Y %H:%M:%S')}\n")
 
 
 @pytest.fixture(scope='session')
@@ -85,15 +100,24 @@ def pytest_runtest_makereport(item, call):
             report.page_url = "-"
     
     if report.when == "call" and report.failed and drv:
-        timestamp = int(time())
-        file_path = SCREEN_DIR / f"{item.name}_{timestamp}.png"
-        
+        tz_argentina = timezone(timedelta(hours=-3))
+        timestamp = datetime.now(tz_argentina).strftime("%Y-%m-%d_%H-%M-%S")
+
+        browser = drv.capabilities.get("browserName", "browser")
+        file_name = f"{item.name}_{browser}_{report.when}_{timestamp}.png"
+
+        file_path = SCREEN_DIR / file_name
+
         try:
             drv.save_screenshot(str(file_path))
             report.extra = getattr(report, "extra", [])
-            report.extra.append(
-                {"name": "Screenshot", "format": "image", "content": str(file_path)}
-            )
+            pytest_html = item.config.pluginmanager.getplugin("html")
+
+            if pytest_html:
+                report.extra.append(
+                    pytest_html.extras.image(str(file_path), name="Screenshot del fallo")
+                )
+
             print(f"📸 Screenshot guardado: {file_path}")
         except Exception as e:
             logger.error(f"No se pudo guardar screenshot: {e}")

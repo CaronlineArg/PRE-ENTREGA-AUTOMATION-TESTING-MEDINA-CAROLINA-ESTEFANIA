@@ -81,6 +81,47 @@ pytest tests/ui/
 pytest tests/api/
 
 ## Interpretación de reportes
+El framework genera automáticamente un reporte HTML al finalizar cada ejecución de pruebas utilizando el plugin pytest-html.
+
+🧾 Información general del reporte
+
+En la parte superior del reporte se muestra:
+
+Nombre del proyecto
+
+Autor
+
+Fecha y hora de ejecución (zona horaria Argentina)
+
+Entorno de ejecución, incluyendo:
+
+Versión de Python
+
+Sistema operativo
+
+Versiones de pytest y plugins utilizados
+
+📈 Resumen de resultados
+
+El resumen indica:
+
+Cantidad total de tests ejecutados
+
+Nombre del test
+
+Tests Passed (exitosos)
+
+Tests Failed (fallidos)
+
+Tests Skipped
+
+Duración
+
+Errores inesperados (si los hubiera)
+
+Captura de pantalla si falló
+
+## Detalles del reporte
 
 - Los reportes HTML se generan en la carpeta reports/.
 
@@ -88,10 +129,6 @@ pytest tests/api/
 
 - Los logs de ejecución se encuentran en reports/logs/framework.log.
 
-- El reporte indica:
-Nombre del test
-Estado (Pasado / Fallido)
-Duración
-Captura de pantalla si falló
+
 
 # Medina Carolina 2025
