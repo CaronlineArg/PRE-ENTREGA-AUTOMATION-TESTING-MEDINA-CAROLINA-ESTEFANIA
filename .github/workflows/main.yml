@@ -1,6 +1,5 @@
 name: CI de Pruebas (Rama Específica)
 
-
 on: 
   push:
     branches: 
@@ -8,36 +7,47 @@ on:
 
 jobs:
   run-tests:
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-latest
 
     steps:
-    
+      # 1️⃣ Checkout del repositorio
       - name: Checkout del Repositorio
-        uses: actions/checkout@v4 
+        uses: actions/checkout@v4
+
+      # 2️⃣ Instalar Microsoft Edge
       - name: Instalar Microsoft Edge
         run: |
-          # Actualizar lista de paquetes
           sudo apt-get update
-          # Instalar dependencias necesarias para navegadores basados en Chromium
           sudo apt-get install -y wget apt-transport-https ca-certificates curl gnupg
-          # Descargar la clave de Microsoft
           curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /usr/share/keyrings/microsoft-edge.gpg > /dev/null
-          # Agregar el repositorio de Edge a las fuentes de apt
           echo "deb [arch=amd64 signed-by=/usr/share/keyrings/microsoft-edge.gpg] https://packages.microsoft.com/repos/edge stable main" | sudo tee /etc/apt/sources.list.d/microsoft-edge.list
-          # Instalar Edge
           sudo apt-get update
           sudo apt-get install -y microsoft-edge-stable
 
-      
-      - name: Configurar Python 3.x
-        uses: actions/setup-python@v5 
+      # 3️⃣ Configurar Python 3.x
+      - name: Configurar Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.x'
-          
+
+      # 4️⃣ Instalar dependencias
       - name: Instalar Dependencias
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          
+
+      # 5️⃣ Ejecutar pruebas con pytest y generar reporte HTML
       - name: Ejecutar Pruebas
-        run: pytest
+        run: |
+          mkdir -p reports
+          pytest -v --html=reports/reporte.html --self-contained-html
+
+      # 6️⃣ Subir reportes y screenshots como artifact (siempre se sube, incluso si pytest falla)
+      - name: Subir reportes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports
+          path: |
+            reports/
+            screens/
