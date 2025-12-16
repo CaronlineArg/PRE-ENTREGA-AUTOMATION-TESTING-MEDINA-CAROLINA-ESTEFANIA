@@ -5,6 +5,7 @@ from selenium import webdriver
 from selenium.webdriver.edge.service import Service as EdgeService
 from selenium.webdriver.edge.options import Options as EdgeOptions
 from datetime import datetime, timezone, timedelta
+import base64
 
 PROJECT_NAME = "SauceDemo"
 EXECUTION_TYPE = "AllTests"
@@ -61,6 +62,7 @@ def driver():
     drv.quit()
 
 
+
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     outcome = yield
@@ -68,7 +70,6 @@ def pytest_runtest_makereport(item, call):
     
     drv = item.funcargs.get("driver", None)
     
-    # Guardar screenshot solo si falla
     if report.when == "call" and report.failed and drv:
         tz_argentina = timezone(timedelta(hours=-3))
         timestamp = datetime.now(tz_argentina).strftime("%Y-%m-%d_%H-%M-%S")
@@ -79,11 +80,21 @@ def pytest_runtest_makereport(item, call):
             drv.save_screenshot(str(file_path))
             report.extra = getattr(report, "extra", [])
             pytest_html = item.config.pluginmanager.getplugin("html")
+            
             if pytest_html:
-                # Incrustar screenshot directamente en el HTML
+                # Leer el archivo y convertir a base64
+                with open(file_path, "rb") as f:
+                    img_base64 = base64.b64encode(f.read()).decode("utf-8")
+                
+                # Incrustar la imagen directamente en el HTML
                 report.extra.append(
-                    pytest_html.extras.image(str(file_path), mime_type='image/png', name="Screenshot del fallo")
+                    pytest_html.extras.html(
+                        f'<div><b>Screenshot del fallo:</b><br>'
+                        f'<img src="data:image/png;base64,{img_base64}" '
+                        f'style="width:600px;border:1px solid #ccc"/></div>'
+                    )
                 )
+            
             print(f"📸 Screenshot guardado e incrustado: {file_path}")
         except Exception as e:
             logger.error(f"No se pudo guardar screenshot: {e}")
