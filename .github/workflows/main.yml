@@ -40,11 +40,11 @@ jobs:
       - name: Ejecutar Pruebas
         run: |
           mkdir -p reports
-          # pytest genera reporte HTML; usamos '|| true' para que el job no falle si hay tests fallidos
-          pytest -s --html=reports/reporte.html || true
+          pytest -v --html=reports/reporte.html --self-contained-html
 
-      # 6️⃣ Subir reporte HTML como artefacto
+      # 6️⃣ Subir reporte HTML como artifact (siempre se sube, incluso si pytest falla)
       - name: Subir reportes
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: reports
